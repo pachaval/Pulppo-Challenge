@@ -1,36 +1,45 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Real Estate Analytics Dashboard
 
-## Getting Started
+**Objetivo:** Construir una aplicación web para visualizar y analizar datos de propiedades utilizando gráficos interactivos y estadísticas, en menos de 72hs.
 
-First, run the development server:
+### Requerimientos
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+### Frontend
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+1. **Framework:** Next.js
+2. **Estilos:** TailwindCSS (preferente) o cualquier librería
+3. **Gráficos:** Utilizar una librería de gráficos como Recharts (recomendado), Chart.js o D3.js
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Backend
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+1. **Opción 1:** Next.js APP Router o Page router
+2. **Opción 2:** Express.js API
 
-## Learn More
+### Base de Datos
 
-To learn more about Next.js, take a look at the following resources:
+- PULPPO proveerá una base de datos de prueba con datos históricos de propiedades del MLS de Pulppo (en MongoDB).
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Funcionalidades
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+1. **Autenticación (opcional):** Implementar registro e inicio de sesión de usuarios.
+2. **Visualización de Datos:** Mostrar diferentes gráficos y tablas para analizar los datos de propiedades (precio medio por ubicación, tendencias de mercado, etc.).
+3. **Filtros:** Implementar filtros para personalizar las visualizaciones de datos.
+4. **Exportar Datos (opcional):** Permitir la exportación de datos en formatos como CSV.
 
-## Deploy on Vercel
+### Requisitos Adicionales
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+1. **Git:** El candidato debe crear un repositorio en GitHub y hacer commits frecuentes y descriptivos.
+2. **Docker (opcional):** Proveer un `Dockerfile` para levantar el frontend y otro para el backend (en caso de utilizar express.js)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### Evaluación
+
+- Realización: Se valora, más que nada, la realización del proyecto, aunque no se termine con todas las funcionalidades. Es importante la priorización. (_Done is better than perfect)_
+- **Funcionalidad:** Que todas las características entregas funcionen correctamente.
+- **Código:** Calidad del código, estructura y organización.
+- **Visualizaciones:** Calidad e interactividad de los gráficos y tablas.
+- **Git:** Uso adecuado de git con commits descriptivos y estructurados.
+- **Docker:** Correcta configuración de Docker y Docker Compose para levantar la aplicación completa.
+
+### Entrega
+
+El candidato deberá compartir el enlace al repositorio GitHub y las instrucciones para levantar el proyecto.
