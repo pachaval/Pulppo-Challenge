@@ -1,4 +1,5 @@
 import React from "react";
+import SearchableDropdown from "../components/SearchDropdown";
 
 const ListingsPage = async () => {
   let listings;
@@ -13,12 +14,9 @@ const ListingsPage = async () => {
   }
 
   return (
-    <div>
-      <h1>House Listings</h1>
+    <div className="flex items-center">
       <ul>
-        {listings.map((listing: any, i: number) => (
-          <li key={i}>{JSON.stringify(listing)}</li>
-        ))}
+        <SearchableDropdown options={listings} />
       </ul>
     </div>
   );
