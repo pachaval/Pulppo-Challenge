@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 
 import Header from "./components/Header";
+import Footer from "./components/Footer";
 
 import "./globals.css";
 
@@ -22,6 +23,7 @@ export default function RootLayout({
       <body className={inter.className}>
         <Header />
         <main className="max-w-4xl mx-auto p-4">{children}</main>
+        <Footer />
       </body>
     </html>
   );

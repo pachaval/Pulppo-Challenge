@@ -1,28 +1,42 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
+import classNames from "classnames";
 
-const Header = () => (
-  <nav className="bg-white shadow-md p-4 flex space-x-6 items-center">
-    <Link href="/">
-      <Image
-        src={`/logo.png`}
-        className="h-10 object-contain"
-        alt="Pulppo"
-        width={256}
-        height={54}
-      />
-    </Link>
-    <ul>
-      <li>
-        <Link
-          className="text-zinc-500 hover:text-zinc-800 transition-colors"
-          href="/listings"
-        >
-          Geo stats
-        </Link>
-      </li>
-    </ul>
-  </nav>
-);
+const Header = () => {
+  const links = [{ label: "GeoStats", href: "/listings" }];
+  const currentPath = usePathname();
+
+  return (
+    <nav className="bg-white shadow-md p-4 flex space-x-6 items-center">
+      <Link href="/">
+        <Image
+          src={`/logo.png`}
+          className="h-10 object-contain"
+          alt="Pulppo"
+          width={256}
+          height={54}
+        />
+      </Link>
+      <ul>
+        {links.map((link) => (
+          <Link
+            key={link.href}
+            href={link.href}
+            className={classNames({
+              "text-zinc-800": currentPath === link.href,
+              "text-zinc-500": currentPath !== link.href,
+              "hover:text-zinc-800 transition-colors": true,
+            })}
+          >
+            {link.label}
+          </Link>
+        ))}
+      </ul>
+    </nav>
+  );
+};
 
 export default Header;
