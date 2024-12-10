@@ -1,17 +1,13 @@
-async function fetchListings() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/listings`, {
-    cache: "no-store",
-  });
-  if (!res.ok) {
-    throw new Error("Failed to fetch listings");
-  }
-  return res.json();
-}
+import React from "react";
 
-export default async function ListingsPage() {
-  let listings = [];
+const ListingsPage = async () => {
+  let listings;
   try {
-    listings = await fetchListings();
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/listings`, {
+      cache: "no-store",
+    });
+
+    listings = await res.json();
   } catch (error: any) {
     console.error(error.message);
   }
@@ -26,4 +22,6 @@ export default async function ListingsPage() {
       </ul>
     </div>
   );
-}
+};
+
+export default ListingsPage;
