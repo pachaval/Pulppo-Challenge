@@ -14,6 +14,9 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
   const [searchTerm, setSearchTerm] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const [listings, setListings] = useState<string[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>("");
 
   const filteredOptions = options.filter((option) =>
     option.toLowerCase().includes(searchTerm.toLowerCase())
@@ -39,6 +42,29 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  const fetchListings = async () => {
+    setLoading(true);
+    setError("");
+    let listings;
+
+    try {
+      const res = await fetch(`/api/listings?city=${searchTerm}`, {
+        cache: "no-store",
+      });
+      listings = await res.json();
+      if (res.ok) {
+        setListings(listings);
+      } else {
+        setError("An error occurred");
+      }
+    } catch (err) {
+      console.log({ err });
+      setError("Failed to fetch listings");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="flex space-x-4">
@@ -72,9 +98,19 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
       <button
         type="button"
         className="focus:outline-none text-white bg-green-700 hover:bg-green-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+        onClick={() => fetchListings()}
+        disabled={searchTerm === "" || loading}
       >
         Go!
       </button>
+      <div>
+        {listings?.map((listing: any) => (
+          <span>
+            ${listing?.listing?.price?.price}
+            <br />
+          </span>
+        ))}
+      </div>
     </div>
   );
 };

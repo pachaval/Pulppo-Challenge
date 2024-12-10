@@ -2,20 +2,32 @@ import mongoose from "mongoose";
 import { connectToDatabase } from "@/lib/mongodb";
 import { NextRequest } from "next/server";
 
-const listingSchema = new mongoose.Schema({}, { strict: false });
-const Listing =
-  mongoose.models.Listing || mongoose.model("Listing", listingSchema, "mls");
+const listingsSchema = new mongoose.Schema({}, { strict: false });
+const Listings =
+  mongoose.models.Listings || mongoose.model("Listings", listingsSchema, "mls");
 
-// RETRIEVE ALL THE CITIES FOUND IN THE DB TO USE AS FILTERS
 export async function GET(request: NextRequest) {
   try {
     await connectToDatabase();
 
-    const uniqueCities = await Listing.distinct("address.city.name", {
-      "address.city.name": { $exists: true },
-    });
+    const url = new URL(request.url);
+    const city = url.searchParams.get("city");
 
-    return new Response(JSON.stringify(uniqueCities), { status: 200 });
+    if (!city) {
+      return new Response(
+        JSON.stringify({ error: "City parameter is required" }),
+        { status: 400 }
+      );
+    }
+
+    const listings = await Listings.find(
+      {
+        "address.city.name": city,
+      },
+      { "listing.price.price": 1, "type": 1 }
+    );
+
+    return new Response(JSON.stringify(listings), { status: 200 });
   } catch (error: any) {
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,

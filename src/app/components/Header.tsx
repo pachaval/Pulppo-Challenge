@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 import classNames from "classnames";
 
 const Header = () => {
-  const links = [{ label: "GeoStats", href: "/listings" }];
+  const links = [{ label: "GeoStats", href: "/cities" }];
   const currentPath = usePathname();
 
   return (
