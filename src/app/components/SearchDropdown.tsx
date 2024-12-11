@@ -5,6 +5,7 @@ import { useSetAtom } from "jotai";
 
 import { listingsAtom } from "../atoms/listingsAtom";
 import { cityAtom } from "../atoms/cityAtom";
+import { searchBarAtom } from "../atoms/searchBarAtom";
 
 interface SearchableDropdownProps {
   options: string[];
@@ -18,6 +19,7 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({ options }) => {
   const [error, setError] = useState<string>("");
   const setListingsAtom = useSetAtom(listingsAtom);
   const setCityAtom = useSetAtom(cityAtom);
+  const setSearchBarAtom = useSetAtom(searchBarAtom);
 
   const filteredOptions = options.filter((option) =>
     option.toLowerCase().includes(city.toLowerCase())
@@ -45,8 +47,7 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({ options }) => {
   }, []);
 
   const fetchListings = async () => {
-    setLoading(true);
-    setError("");
+    setSearchBarAtom({ loading: true, error: "" });
     let data;
 
     try {
@@ -65,7 +66,7 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({ options }) => {
     } catch (err) {
       setError("Failed to fetch listings");
     } finally {
-      setLoading(false);
+      setSearchBarAtom((atom) => ({ ...atom, loading: false }));
     }
   };
 

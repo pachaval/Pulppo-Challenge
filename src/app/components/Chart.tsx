@@ -11,8 +11,10 @@ import {
   ResponsiveContainer,
   TooltipProps,
 } from "recharts";
-import { Listing, listingsAtom } from "../atoms/listingsAtom";
+import { listingsAtom } from "../atoms/listingsAtom";
 import { useAtom } from "jotai";
+import { searchBarAtom } from "../atoms/searchBarAtom";
+import Spinner from "./Spinner";
 
 const CustomTooltip: React.FC<TooltipProps<any, any>> = ({
   active,
@@ -57,6 +59,7 @@ const CustomTooltip: React.FC<TooltipProps<any, any>> = ({
 
 const Chart: React.FC = () => {
   const [listings] = useAtom(listingsAtom);
+  const [{ loading }] = useAtom(searchBarAtom);
 
   const [data, setData] = useState<
     { roofedSurface: number; Casa?: number; Departamento?: number }[]
@@ -109,28 +112,36 @@ const Chart: React.FC = () => {
 
   return (
     <div style={{ width: "80%", height: "400px" }}>
-      <h4 className="text-2xl dark:text-black mb-5">Propiedades ($/m²)</h4>
-      <ResponsiveContainer width="100%" height="100%">
-        <BarChart
-          data={data}
-          margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-        >
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis
-            dataKey="roofedSurface"
-            tickFormatter={(value) => value + "m²"}
-          />
-          <YAxis
-            type="number"
-            tickFormatter={(value) =>
-              "$" + (value / 1000).toLocaleString("de-DE") + "k"
-            }
-          />
-          <Tooltip content={<CustomTooltip />} />
-          <Bar dataKey="Casa" fill="#0088FE" barSize={30} />
-          <Bar dataKey="Departamento" fill="#82ca9d" barSize={30} />
-        </BarChart>
-      </ResponsiveContainer>
+      <h4 className="mb-10 font-extrabold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-2xl dark:text-black">
+        Propiedades{" "}
+        <mark className="px-2 text-white bg-blue-600 rounded dark:bg-blue-500">
+          ($/m²)
+        </mark>{" "}
+      </h4>
+      {loading && <Spinner />}
+      {!loading && (
+        <ResponsiveContainer width="100%" height="100%">
+          <BarChart
+            data={data}
+            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+          >
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis
+              dataKey="roofedSurface"
+              tickFormatter={(value) => value + "m²"}
+            />
+            <YAxis
+              type="number"
+              tickFormatter={(value) =>
+                "$" + (value / 1000).toLocaleString("de-DE") + "k"
+              }
+            />
+            <Tooltip content={<CustomTooltip />} />
+            <Bar dataKey="Casa" fill="#0088FE" barSize={30} />
+            <Bar dataKey="Departamento" fill="#82ca9d" barSize={30} />
+          </BarChart>
+        </ResponsiveContainer>
+      )}
     </div>
   );
 };

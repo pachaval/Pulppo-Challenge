@@ -5,6 +5,8 @@ import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { cityAtom } from "../atoms/cityAtom";
 import { useAtom } from "jotai";
 import { listingsAtom } from "../atoms/listingsAtom";
+import { searchBarAtom } from "../atoms/searchBarAtom";
+import Spinner from "./Spinner";
 
 const COLORS: Record<string, string> = {
   Departamento: "#00C49F",
@@ -50,6 +52,7 @@ const renderCustomizedLabel = ({
 const CityPieChart = () => {
   const [listings] = useAtom(listingsAtom);
   const [cityAvg] = useAtom(cityAtom);
+  const [{ loading }] = useAtom(searchBarAtom);
 
   const data = Object.entries(cityAvg).map(([name, value]) => ({
     name,
@@ -62,43 +65,51 @@ const CityPieChart = () => {
 
   return (
     <div style={{ width: "60%", height: "400px" }}>
-      <h4 className="text-2xl dark:text-black">Precio medio por m²</h4>
-      <ResponsiveContainer width="100%" height="100%">
-        <PieChart width={400} height={400}>
-          <Pie
-            data={data}
-            cx="50%"
-            cy="50%"
-            labelLine={false}
-            label={({ cx, cy, midAngle, innerRadius, outerRadius, value }) =>
-              renderCustomizedLabel({
-                cx,
-                cy,
-                midAngle,
-                innerRadius,
-                outerRadius,
-                value,
-              })
-            }
-            outerRadius={150}
-            fill="#8884d8"
-            dataKey="value"
-          >
-            {data.map((entry) => (
-              <Cell
-                key={`cell-${entry.name}`}
-                fill={COLORS[entry.name] || "#cccccc"}
-              />
-            ))}
-          </Pie>
-          <Tooltip
-            formatter={(value: number, name: string) => [
-              `$${Math.round(value)}`,
-              name,
-            ]}
-          />
-        </PieChart>
-      </ResponsiveContainer>
+      <h4 className="mb-10 font-extrabold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-2xl dark:text-black">
+        Precio medio por{" "}
+        <mark className="px-2 text-white bg-blue-600 rounded dark:bg-blue-500">
+          m²
+        </mark>{" "}
+      </h4>
+      {loading && <Spinner />}
+      {!loading && (
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart width={400} height={400}>
+            <Pie
+              data={data}
+              cx="50%"
+              cy="50%"
+              labelLine={false}
+              label={({ cx, cy, midAngle, innerRadius, outerRadius, value }) =>
+                renderCustomizedLabel({
+                  cx,
+                  cy,
+                  midAngle,
+                  innerRadius,
+                  outerRadius,
+                  value,
+                })
+              }
+              outerRadius={150}
+              fill="#8884d8"
+              dataKey="value"
+            >
+              {data.map((entry) => (
+                <Cell
+                  key={`cell-${entry.name}`}
+                  fill={COLORS[entry.name] || "#cccccc"}
+                />
+              ))}
+            </Pie>
+            <Tooltip
+              formatter={(value: number, name: string) => [
+                `$${Math.round(value)}`,
+                name,
+              ]}
+            />
+          </PieChart>
+        </ResponsiveContainer>
+      )}
     </div>
   );
 };
