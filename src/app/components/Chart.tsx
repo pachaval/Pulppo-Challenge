@@ -57,7 +57,6 @@ const CustomTooltip: React.FC<TooltipProps<any, any>> = ({
 
 const Chart: React.FC = () => {
   const [listings] = useAtom(listingsAtom);
-  console.log({ listings });
 
   const [data, setData] = useState<
     { roofedSurface: number; Casa?: number; Departamento?: number }[]
@@ -112,11 +111,14 @@ const Chart: React.FC = () => {
           margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="roofedSurface" />
+          <XAxis
+            dataKey="roofedSurface"
+            tickFormatter={(value) => value + "m²"}
+          />
           <YAxis
             type="number"
             tickFormatter={(value) =>
-              (value / 1000).toLocaleString("de-DE") + "k"
+              "$" + (value / 1000).toLocaleString("de-DE") + "k"
             }
           />
           <Tooltip content={<CustomTooltip />} />

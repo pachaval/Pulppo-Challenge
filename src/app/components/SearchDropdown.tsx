@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react";
 import { useSetAtom } from "jotai";
 
 import { listingsAtom } from "../atoms/listingsAtom";
+import { cityAtom } from "../atoms/cityAtom";
 
 interface SearchableDropdownProps {
   options: string[];
@@ -16,6 +17,7 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({ options }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const setListingsAtom = useSetAtom(listingsAtom);
+  const setCityAtom = useSetAtom(cityAtom);
 
   const filteredOptions = options.filter((option) =>
     option.toLowerCase().includes(city.toLowerCase())
@@ -45,23 +47,22 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({ options }) => {
   const fetchListings = async () => {
     setLoading(true);
     setError("");
-    let listings;
+    let data;
 
     try {
       const res = await fetch(`/api/listings?city=${city}`, {
         cache: "no-store",
       });
-      listings = await res.json();
-      console.log({ listings });
+      data = await res.json();
+      console.log({ data });
 
       if (res.ok) {
-        // setListings(listings);
-        setListingsAtom(listings);
+        setListingsAtom(data.listings);
+        setCityAtom(data.avgPerType);
       } else {
         setError("An error occurred");
       }
     } catch (err) {
-      console.log({ err });
       setError("Failed to fetch listings");
     } finally {
       setLoading(false);

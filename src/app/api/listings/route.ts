@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { NextRequest } from "next/server";
 import { connectToDatabase } from "@/lib/mongodb";
 import removeUnusualData from "@/app/utils/dataCleaner";
+import calculateAveragePricePerMeterByType from "@/app/utils/averageCalculator";
 
 const listingsSchema = new mongoose.Schema({}, { strict: false });
 const Listings =
@@ -39,8 +40,16 @@ export async function GET(request: NextRequest) {
     ]);
 
     const cleanedData = removeUnusualData(listings);
+    const avgPerType = calculateAveragePricePerMeterByType(listings);
 
-    return new Response(JSON.stringify(cleanedData), { status: 200 });
+    const data = {
+      listings: cleanedData,
+      avgPerType,
+    };
+
+    return new Response(JSON.stringify(data), {
+      status: 200,
+    });
   } catch (error: any) {
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
