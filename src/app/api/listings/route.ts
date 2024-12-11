@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
-import { connectToDatabase } from "@/lib/mongodb";
 import { NextRequest } from "next/server";
+import { connectToDatabase } from "@/lib/mongodb";
+import removeUnusualData from "@/app/utils/dataCleaner";
 
 const listingsSchema = new mongoose.Schema({}, { strict: false });
 const Listings =
@@ -37,7 +38,9 @@ export async function GET(request: NextRequest) {
       },
     ]);
 
-    return new Response(JSON.stringify(listings), { status: 200 });
+    const cleanedData = removeUnusualData(listings);
+
+    return new Response(JSON.stringify(cleanedData), { status: 200 });
   } catch (error: any) {
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,

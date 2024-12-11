@@ -9,100 +9,50 @@ import {
   CartesianGrid,
   Tooltip,
   ResponsiveContainer,
+  TooltipProps,
 } from "recharts";
 import { Listing, listingsAtom } from "../atoms/listingsAtom";
 import { useAtom } from "jotai";
 
-// const transformedData = data.map((item) => {
-//   const costsObject = item.cost.reduce((acc: any, cost, index) => {
-//     acc[`cost${index + 1}`] = cost;
-//     return acc;
-//   }, {});
-//   return {
-//     type: item.type,
-//     ...costsObject,
-//   };
-// });
-
-const transformData = (listings: Listing[]) => {
-  return listings.map((item: any) => {
-    const costsObject = item.cost.reduce((acc: any, cost: any, index: any) => {
-      acc[`cost${index + 1}`] = cost;
-      return acc;
-    }, {});
-    return {
-      type: item.type,
-      ...costsObject,
-    };
-  });
-};
-
-const typeColors: Record<string, string> = {
-  Casa: "#8884d8",
-  Departamento: "#82ca9d",
-  Lote: "#ffc658",
-};
-
-const CustomTooltip: React.FC<any> = ({ active, payload }) => {
+const CustomTooltip: React.FC<TooltipProps<any, any>> = ({ active, payload }) => {
   if (active && payload && payload.length) {
-    const costs = payload.map((entry: any) => entry.value);
-    const sum = costs.reduce((total: number, cost: number) => total + cost, 0);
-    const media = sum / costs.length;
+    const data = payload[0].payload;
+    const price = data.price;
+    const surface = data.roofedSurface;
+    const avg = surface ? price / surface : 0;
 
     return (
-      <div
-        style={{
-          backgroundColor: "#fff",
-          border: "1px solid #ccc",
-          padding: "10px",
-          borderRadius: "5px",
-          boxShadow: "0px 0px 5px rgba(0,0,0,0.2)",
-        }}
-      >
-        <p style={{ margin: 0, fontWeight: "bold" }}>Media</p>
-        <span>{`$${media.toFixed(2)}`}</span>{" "}
+      <div style={{ backgroundColor: "#fff", border: "1px solid #ccc", padding: "10px" }}>
+        <p style={{ margin: 0 }}>Price: ${price}</p>
+        <p style={{ margin: 0 }}>m2: {surface}</p>
+        <p style={{ margin: 0 }}>avg: {avg.toFixed(2)}</p>
       </div>
     );
   }
-
   return null;
 };
 
 const Chart: React.FC = () => {
-  const [listings, setListings] = useAtom(listingsAtom);
-  const [transformedData, setTransformedData] = useState([]);
+  const [listings] = useAtom(listingsAtom);
+  const [filteredData, setFilteredData] = useState<Listing[]>([]);
 
-  // useEffect(() => {
-  //   setTransformedData(listings);
-  // }, listings);
-  
-  console.log("atom", listings);
+  useEffect(() => {
+    const casas = listings.filter((item) => item.type === "Departamento");
+    setFilteredData(casas);
+  }, [listings]);
 
   return (
     <div style={{ width: "100%", height: "400px" }}>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
-          data={transformedData}
-          margin={{
-            top: 5,
-            right: 30,
-            left: 20,
-            bottom: 5,
-          }}
+          data={filteredData}
+          margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
         >
           <CartesianGrid strokeDasharray="3 3" />
-          <XAxis dataKey="type" />
-          <YAxis />
+          <XAxis dataKey="roofedSurface" />
+          <YAxis type="number" />
           <Tooltip content={<CustomTooltip />} />
-          {/* {Array.from({
-            length: Math.max(...data.map((item) => item.cost.length)),
-          }).map((_, costIndex) => (
-            <Bar
-              key={`cost${costIndex + 1}`}
-              dataKey={`cost${costIndex + 1}`}
-              fill={typeColors[data[costIndex]?.type]}
-            />
-          ))} */}
+          <Bar dataKey="price" fill="#8884d8" />
         </BarChart>
       </ResponsiveContainer>
     </div>

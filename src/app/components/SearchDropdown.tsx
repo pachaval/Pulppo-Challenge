@@ -1,22 +1,18 @@
 "use client";
 
-import { useSetAtom } from "jotai";
 import React, { useEffect, useRef, useState } from "react";
+import { useSetAtom } from "jotai";
+
 import { listingsAtom } from "../atoms/listingsAtom";
 
 interface SearchableDropdownProps {
   options: string[];
-  placeholder?: string;
 }
 
-const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
-  options,
-  placeholder = "Search by city...",
-}) => {
+const SearchableDropdown: React.FC<SearchableDropdownProps> = ({ options }) => {
   const [city, setCity] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const [listings, setListings] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
   const setListingsAtom = useSetAtom(listingsAtom);
@@ -81,7 +77,7 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
           onChange={(e) => setCity(e.target.value)}
           onFocus={() => setIsOpen(true)}
           className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
-          placeholder={placeholder}
+          placeholder="Buscar ciudad..."
         />
         {isOpen && (
           <ul className="absolute w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
@@ -107,7 +103,7 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
         onClick={() => fetchListings()}
         disabled={city === "" || loading}
       >
-        Go!
+        Buscar!
       </button>
     </div>
   );

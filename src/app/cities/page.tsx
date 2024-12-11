@@ -1,6 +1,7 @@
 import React from "react";
 import SearchableDropdown from "../components/SearchDropdown";
 import Chart from "../components/Chart";
+import CityScatterChart from "../components/CityScatterChart";
 
 const CitiesPage = async () => {
   let cities;
@@ -18,7 +19,7 @@ const CitiesPage = async () => {
     <div className="flex-col items-center">
       <SearchableDropdown options={cities} />
       <div className="flex">
-        <Chart />
+        <CityScatterChart />
         <Chart />
       </div>
     </div>
