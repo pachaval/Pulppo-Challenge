@@ -6,7 +6,10 @@ import { usePathname } from "next/navigation";
 import classNames from "classnames";
 
 const Header = () => {
-  const links = [{ label: "GeoStats", href: "/cities" }];
+  const links = [
+    { label: "CityStats", href: "/cities" },
+    { label: "CityCompare", href: "/cityCompare" },
+  ];
   const currentPath = usePathname();
 
   return (
@@ -29,6 +32,7 @@ const Header = () => {
               "text-zinc-800": currentPath === link.href,
               "text-zinc-500": currentPath !== link.href,
               "hover:text-zinc-800 transition-colors": true,
+              "m-5": true,
             })}
           >
             {link.label}

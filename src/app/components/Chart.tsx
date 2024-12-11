@@ -103,8 +103,13 @@ const Chart: React.FC = () => {
     setData(chartData);
   }, [listings]);
 
+  if (!listings.length) {
+    return null;
+  }
+
   return (
     <div style={{ width: "80%", height: "400px" }}>
+      <h4 className="text-2xl dark:text-black mb-5">Propiedades ($/m²)</h4>
       <ResponsiveContainer width="100%" height="100%">
         <BarChart
           data={data}
@@ -122,7 +127,7 @@ const Chart: React.FC = () => {
             }
           />
           <Tooltip content={<CustomTooltip />} />
-          <Bar dataKey="Casa" fill="#8884d8" barSize={30} />
+          <Bar dataKey="Casa" fill="#0088FE" barSize={30} />
           <Bar dataKey="Departamento" fill="#82ca9d" barSize={30} />
         </BarChart>
       </ResponsiveContainer>

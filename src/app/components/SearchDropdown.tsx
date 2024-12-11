@@ -70,7 +70,7 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({ options }) => {
   };
 
   return (
-    <div className="flex space-x-4 place-content-center my-6">
+    <div className="flex space-x-4 place-content-center mb-10">
       <div ref={dropdownRef} className="relative w-64">
         <input
           type="text"
@@ -81,7 +81,7 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({ options }) => {
           placeholder="Buscar ciudad..."
         />
         {isOpen && (
-          <ul className="absolute w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto">
+          <ul className="absolute w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto z-50">
             {filteredOptions.length > 0 ? (
               filteredOptions.map((option, index) => (
                 <li

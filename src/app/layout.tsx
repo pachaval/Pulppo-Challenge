@@ -22,7 +22,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Header />
-        <main className="flex-row items-center m-20">{children}</main>
+        <main className="flex-row items-center mx-20 my-10">{children}</main>
         <Footer />
       </body>
     </html>

@@ -11,6 +11,8 @@ export async function GET() {
 
     const uniqueCities = await Cities.distinct("address.city.name", {
       "address.city.name": { $exists: true },
+      type: { $in: ["Casa", "Departamento"] },
+      "attributes.roofedSurface": { $gt: 0 },
     });
 
     return new Response(JSON.stringify(uniqueCities), { status: 200 });

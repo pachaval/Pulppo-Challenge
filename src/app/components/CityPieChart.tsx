@@ -4,6 +4,7 @@ import React from "react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
 import { cityAtom } from "../atoms/cityAtom";
 import { useAtom } from "jotai";
+import { listingsAtom } from "../atoms/listingsAtom";
 
 const COLORS: Record<string, string> = {
   Departamento: "#00C49F",
@@ -47,6 +48,7 @@ const renderCustomizedLabel = ({
 };
 
 const CityPieChart = () => {
+  const [listings] = useAtom(listingsAtom);
   const [cityAvg] = useAtom(cityAtom);
 
   const data = Object.entries(cityAvg).map(([name, value]) => ({
@@ -54,8 +56,13 @@ const CityPieChart = () => {
     value,
   }));
 
+  if (listings.length < 1) {
+    return <span>Ingrese una ciudad para comenzar!</span>;
+  }
+
   return (
-    <div style={{ width: "100%", height: "400px" }}>
+    <div style={{ width: "60%", height: "400px" }}>
+      <h4 className="text-2xl dark:text-black">Precio medio por m²</h4>
       <ResponsiveContainer width="100%" height="100%">
         <PieChart width={400} height={400}>
           <Pie

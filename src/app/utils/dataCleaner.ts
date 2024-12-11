@@ -8,14 +8,16 @@
 
 export default function removeUnusualData(listings: any) {
   listings.forEach((listing: any) => {
-    listing.avgPricePerMeter = listing.price / listing.roofedSurface;
+    listing.avgPricePerMeter = Math.round(
+      listing.price / listing.roofedSurface
+    );
   });
 
   const totalPricePerMeter = listings.reduce(
-    (sum: any, house: any) => sum + (house.avgPricePerMeter || 0),
+    (sum: any, listing: any) => sum + (listing.avgPricePerMeter || 0),
     0
   );
-  const avgPricePerMeter = totalPricePerMeter / listings.length;
+  const avgPricePerMeter = Math.round(totalPricePerMeter / listings.length);
 
   const lowerBound = avgPricePerMeter * 0.5;
   const upperBound = avgPricePerMeter * 1.5;
@@ -28,3 +30,7 @@ export default function removeUnusualData(listings: any) {
 
   return filteredHouses;
 }
+
+// Hay algunos casos como el de Irapuato, donde el precio por metro de una casa es de $44
+// mientras que hay otra casa donde el precio es $19.000.
+// Esta solucion excluye a esas ciudades por razones de integridad de datos.
