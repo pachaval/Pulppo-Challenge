@@ -21,10 +21,6 @@ const CityPieChart = () => {
     value,
   }));
 
-  if (listings.length < 1) {
-    return <span>Ingrese una ciudad para comenzar!</span>;
-  }
-
   return (
     <div className="w-3/5 h-[400px]">
       <h4 className="mb-10 font-extrabold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-2xl dark:text-black">
@@ -34,7 +30,10 @@ const CityPieChart = () => {
         </mark>
       </h4>
       {loading && <Spinner />}
-      {!loading && (
+      {!loading && listings.length === 0 && (
+        <span>Busca una ciudad para ver los datos...</span>
+      )}
+      {!loading && listings.length > 0 && (
         <ResponsiveContainer width="100%" height="100%">
           <PieChart width={400} height={400}>
             <Pie
