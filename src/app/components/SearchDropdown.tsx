@@ -104,9 +104,9 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
         Go!
       </button>
       <div>
-        {listings?.map((listing: any) => (
-          <span>
-            ${listing?.listing?.price?.price}
+        {listings?.map((listing: any, i: number) => (
+          <span key={i}>
+            ${listing?.listing?.price?.price} {listing?.type}
             <br />
           </span>
         ))}
