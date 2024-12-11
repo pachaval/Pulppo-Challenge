@@ -57,7 +57,7 @@ const CustomTooltip: React.FC<TooltipProps<any, any>> = ({
   return null;
 };
 
-const Chart: React.FC = () => {
+const CityBarChart: React.FC = () => {
   const [listings] = useAtom(listingsAtom);
   const [{ loading }] = useAtom(searchBarAtom);
 
@@ -146,4 +146,4 @@ const Chart: React.FC = () => {
   );
 };
 
-export default Chart;
+export default CityBarChart;
