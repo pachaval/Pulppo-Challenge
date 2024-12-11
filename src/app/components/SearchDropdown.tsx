@@ -80,6 +80,7 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({ options }) => {
           onFocus={() => setIsOpen(true)}
           className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
           placeholder="Buscar ciudad..."
+          disabled={options.length === 0}
         />
         {isOpen && (
           <ul className="absolute w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto z-50">
