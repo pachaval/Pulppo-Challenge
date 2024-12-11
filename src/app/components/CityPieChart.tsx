@@ -1,60 +1,22 @@
 "use client";
 
 import React from "react";
-import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
-import { cityAtom } from "../atoms/cityAtom";
 import { useAtom } from "jotai";
-import { listingsAtom } from "../atoms/listingsAtom";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip } from "recharts";
+
 import { searchBarAtom } from "../atoms/searchBarAtom";
+import { listingsAtom } from "../atoms/listingsAtom";
+import CustomizedLabel from "./CustomizedLabel";
+import { cityAtom } from "../atoms/cityAtom";
 import Spinner from "./Spinner";
-
-const COLORS: Record<string, string> = {
-  Departamento: "#00C49F",
-  Casa: "#0088FE",
-};
-
-const RADIAN = Math.PI / 180;
-
-interface LabelProps {
-  cx: number;
-  cy: number;
-  midAngle: number;
-  innerRadius: number;
-  outerRadius: number;
-  value: number;
-}
-
-const renderCustomizedLabel = ({
-  cx,
-  cy,
-  midAngle,
-  innerRadius,
-  outerRadius,
-  value,
-}: LabelProps) => {
-  const radius = innerRadius + (outerRadius - innerRadius) * 0.5;
-  const x = cx + radius * Math.cos(-midAngle * RADIAN);
-  const y = cy + radius * Math.sin(-midAngle * RADIAN);
-
-  return (
-    <text
-      x={x}
-      y={y}
-      fill="white"
-      textAnchor={x > cx ? "start" : "end"}
-      dominantBaseline="central"
-    >
-      {`$${Math.round(value)}`}
-    </text>
-  );
-};
+import { COLORS } from "../types";
 
 const CityPieChart = () => {
+  const [{ loading }] = useAtom(searchBarAtom);
   const [listings] = useAtom(listingsAtom);
   const [cityAvg] = useAtom(cityAtom);
-  const [{ loading }] = useAtom(searchBarAtom);
 
-  const data = Object.entries(cityAvg).map(([name, value]) => ({
+  const cityData = Object.entries(cityAvg).map(([name, value]) => ({
     name,
     value,
   }));
@@ -64,24 +26,24 @@ const CityPieChart = () => {
   }
 
   return (
-    <div style={{ width: "60%", height: "400px" }}>
+    <div className="w-3/5 h-[400px]">
       <h4 className="mb-10 font-extrabold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-2xl dark:text-black">
         Precio medio por{" "}
         <mark className="px-2 text-white bg-blue-600 rounded dark:bg-blue-500">
           m²
-        </mark>{" "}
+        </mark>
       </h4>
       {loading && <Spinner />}
       {!loading && (
         <ResponsiveContainer width="100%" height="100%">
           <PieChart width={400} height={400}>
             <Pie
-              data={data}
+              data={cityData}
               cx="50%"
               cy="50%"
               labelLine={false}
               label={({ cx, cy, midAngle, innerRadius, outerRadius, value }) =>
-                renderCustomizedLabel({
+                CustomizedLabel({
                   cx,
                   cy,
                   midAngle,
@@ -91,13 +53,13 @@ const CityPieChart = () => {
                 })
               }
               outerRadius={150}
-              fill="#8884d8"
               dataKey="value"
+              fill="#8884d8"
             >
-              {data.map((entry) => (
+              {cityData.map((entry) => (
                 <Cell
-                  key={`cell-${entry.name}`}
                   fill={COLORS[entry.name] || "#cccccc"}
+                  key={`cell-${entry.name}`}
                 />
               ))}
             </Pie>

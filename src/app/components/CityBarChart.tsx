@@ -1,108 +1,31 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
+import { useAtom } from "jotai";
 import {
+  ResponsiveContainer,
+  CartesianGrid,
   BarChart,
-  Bar,
+  Tooltip,
   XAxis,
   YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-  TooltipProps,
+  Bar,
 } from "recharts";
-import { listingsAtom } from "../atoms/listingsAtom";
-import { useAtom } from "jotai";
+
 import { searchBarAtom } from "../atoms/searchBarAtom";
+import { listingsAtom } from "../atoms/listingsAtom";
+import groupListings from "../utils/groupListings";
+import CustomTooltip from "./CustomTooltip";
+import { ChartData } from "../types";
 import Spinner from "./Spinner";
 
-const CustomTooltip: React.FC<TooltipProps<any, any>> = ({
-  active,
-  payload,
-}) => {
-  if (active && payload && payload.length) {
-    const data = payload[0].payload;
-    const { Casa, Departamento, roofedSurface } = data;
-
-    return (
-      <div
-        style={{
-          backgroundColor: "#fff",
-          border: "1px solid #ccc",
-          padding: "10px",
-        }}
-      >
-        <p style={{ margin: 0, fontWeight: "bold" }}>
-          {Casa !== undefined ? "Casa" : "Departamento"} de {roofedSurface}m²
-        </p>
-        {Casa !== undefined && (
-          <>
-            <p style={{ margin: 0 }}>Total: ${Casa}</p>
-            <p style={{ margin: 0 }}>
-              Precio por m2: ${(Casa / roofedSurface).toFixed(2)}
-            </p>
-          </>
-        )}
-        {Departamento !== undefined && (
-          <>
-            <p style={{ margin: 0 }}>Total: ${Departamento}</p>
-            <p style={{ margin: 0 }}>
-              Precio por m2: ${(Departamento / roofedSurface).toFixed(2)}
-            </p>
-          </>
-        )}
-      </div>
-    );
-  }
-  return null;
-};
-
 const CityBarChart: React.FC = () => {
-  const [listings] = useAtom(listingsAtom);
+  const [data, setData] = useState<ChartData[]>([]);
   const [{ loading }] = useAtom(searchBarAtom);
-
-  const [data, setData] = useState<
-    { roofedSurface: number; Casa?: number; Departamento?: number }[]
-  >([]);
+  const [listings] = useAtom(listingsAtom);
 
   useEffect(() => {
-    const grouped: Record<
-      number,
-      { casaPrices: number[]; deptPrices: number[] }
-    > = {};
-
-    listings.forEach((item) => {
-      const { roofedSurface, price, type } = item;
-      if (!grouped[roofedSurface]) {
-        grouped[roofedSurface] = { casaPrices: [], deptPrices: [] };
-      }
-      if (type === "Casa") {
-        grouped[roofedSurface].casaPrices.push(price);
-      } else if (type === "Departamento") {
-        grouped[roofedSurface].deptPrices.push(price);
-      }
-    });
-
-    const chartData = Object.entries(grouped)
-      .map(([surfaceStr, { casaPrices, deptPrices }]) => {
-        const roofedSurface = Number(surfaceStr);
-        const casaAvg =
-          casaPrices.length > 0
-            ? casaPrices.reduce((sum, val) => sum + val, 0) / casaPrices.length
-            : undefined;
-        const deptAvg =
-          deptPrices.length > 0
-            ? deptPrices.reduce((sum, val) => sum + val, 0) / deptPrices.length
-            : undefined;
-
-        return {
-          roofedSurface,
-          Casa: casaAvg,
-          Departamento: deptAvg,
-        };
-      })
-      .sort((a, b) => a.roofedSurface - b.roofedSurface);
-
+    const chartData = groupListings(listings);
     setData(chartData);
   }, [listings]);
 
@@ -111,12 +34,12 @@ const CityBarChart: React.FC = () => {
   }
 
   return (
-    <div style={{ width: "80%", height: "400px" }}>
+    <div className="w-4/5 h-[400px]">
       <h4 className="mb-10 font-extrabold leading-none tracking-tight text-gray-900 md:text-2xl lg:text-2xl dark:text-black">
         Propiedades{" "}
         <mark className="px-2 text-white bg-blue-600 rounded dark:bg-blue-500">
           ($/m²)
-        </mark>{" "}
+        </mark>
       </h4>
       {loading && <Spinner />}
       {!loading && (

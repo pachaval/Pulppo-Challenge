@@ -1,15 +1,6 @@
 const Spinner: React.FC = () => (
-  <div style={{ textAlign: "center", marginTop: "20px" }}>
-    <div
-      style={{
-        width: "50px",
-        height: "50px",
-        border: "5px solid #f3f3f3",
-        borderTop: "5px solid #3498db",
-        borderRadius: "50%",
-        animation: "spin 1s linear infinite",
-      }}
-    />
+  <div className="text-center mt-5">
+    <div className="w-[50px] h-[50px] border-4 border-gray-200 border-t-blue-500 rounded-full animate-spin" />
     <style>
       {`
         @keyframes spin {

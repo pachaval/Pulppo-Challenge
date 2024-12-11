@@ -1,5 +1,6 @@
 let cachedCities = null;
 
+// La llamada de las ciudades/filtros la hago una vez y la cacheo
 export const fetchCities = async () => {
     if (cachedCities) {
         return cachedCities;

@@ -1,3 +1,6 @@
+// Esta funcion me devuelve por cada tipo (casa, departamento), la media
+// del precio por metro cuadrado de la ciudad en cuestion
+
 export default function calculateAveragePricePerMeterByType(listings: any) {
   const typeData: { [key: string]: { total: number; count: number } } = {};
 

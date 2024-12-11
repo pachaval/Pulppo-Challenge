@@ -9,6 +9,11 @@ export async function GET() {
   try {
     await connectToDatabase();
 
+    // A modo de tener datos congruentes y optimizar la query obtengo
+    // los nombres de ciudades que tengan mas de 30 campos con
+    // casas y departamentos cuyos metros sean mayor a 0. Esta data
+    // va a servir como base del filtro que usa la app. Se buscará una
+    // vez estaticamente y se cacheara para optimizar performance.
     const uniqueCities = await Cities.aggregate([
       {
         $match: {

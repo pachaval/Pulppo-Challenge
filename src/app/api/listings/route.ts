@@ -1,8 +1,9 @@
 import mongoose from "mongoose";
 import { NextRequest } from "next/server";
-import { connectToDatabase } from "@/lib/mongodb";
-import removeUnusualData from "@/app/utils/dataCleaner";
+
 import calculateAveragePricePerMeterByType from "@/app/utils/averageCalculator";
+import removeUnusualData from "@/app/utils/dataCleaner";
+import { connectToDatabase } from "@/lib/mongodb";
 
 const listingsSchema = new mongoose.Schema({}, { strict: false });
 const Listings =
@@ -22,6 +23,7 @@ export async function GET(request: NextRequest) {
       );
     }
 
+    // Aqui obtengo unicamente los datos que necesito para utilizar en la app y optimizar la query
     const listings = await Listings.aggregate([
       {
         $match: {
@@ -40,7 +42,7 @@ export async function GET(request: NextRequest) {
     ]);
 
     const cleanedData = removeUnusualData(listings);
-    const avgPerType = calculateAveragePricePerMeterByType(listings);
+    const avgPerType = calculateAveragePricePerMeterByType(cleanedData);
 
     const data = {
       listings: cleanedData,

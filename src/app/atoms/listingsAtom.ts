@@ -1,9 +1,4 @@
 import { atom } from "jotai";
-
-export type Listing = {
-  type: string;
-  roofedSurface: number;
-  price: number;
-};
+import { Listing } from "../types";
 
 export const listingsAtom = atom<Listing[]>([]);

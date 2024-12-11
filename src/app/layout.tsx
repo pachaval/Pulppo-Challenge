@@ -9,8 +9,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Pulppo Challenge",
   description: "Challenge realizado por Pablo Achaval",
+  title: "Pulppo Challenge",
 };
 
 export default function RootLayout({
@@ -22,7 +22,9 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Header />
-        <main className="flex-row items-center mx-20 my-10 mb-40">{children}</main>
+        <main className="flex-row items-center mx-20 my-10 mb-40">
+          {children}
+        </main>
         <Footer />
       </body>
     </html>
