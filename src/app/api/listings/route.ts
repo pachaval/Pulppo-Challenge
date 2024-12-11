@@ -20,12 +20,22 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    const listings = await Listings.find(
+    const listings = await Listings.aggregate([
       {
-        "address.city.name": city,
+        $match: {
+          "address.city.name": city,
+          type: { $in: ["Casa", "Departamento"] },
+          "attributes.roofedSurface": { $gt: 0 },
+        },
       },
-      { "listing.price.price": 1, "type": 1 }
-    );
+      {
+        $project: {
+          price: "$listing.price.price",
+          type: 1,
+          roofedSurface: "$attributes.roofedSurface",
+        },
+      },
+    ]);
 
     return new Response(JSON.stringify(listings), { status: 200 });
   } catch (error: any) {

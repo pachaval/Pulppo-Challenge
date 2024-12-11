@@ -15,9 +15,12 @@ const CitiesPage = async () => {
   }
 
   return (
-    <div className="flex items-center">
+    <div className="flex-col items-center">
       <SearchableDropdown options={cities} />
-      <Chart />
+      <div className="flex">
+        <Chart />
+        <Chart />
+      </div>
     </div>
   );
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   BarChart,
   Bar,
@@ -10,37 +10,32 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
+import { Listing, listingsAtom } from "../atoms/listingsAtom";
+import { useAtom } from "jotai";
 
-type DataItem = {
-  type: string;
-  cost: number[];
+// const transformedData = data.map((item) => {
+//   const costsObject = item.cost.reduce((acc: any, cost, index) => {
+//     acc[`cost${index + 1}`] = cost;
+//     return acc;
+//   }, {});
+//   return {
+//     type: item.type,
+//     ...costsObject,
+//   };
+// });
+
+const transformData = (listings: Listing[]) => {
+  return listings.map((item: any) => {
+    const costsObject = item.cost.reduce((acc: any, cost: any, index: any) => {
+      acc[`cost${index + 1}`] = cost;
+      return acc;
+    }, {});
+    return {
+      type: item.type,
+      ...costsObject,
+    };
+  });
 };
-
-const data: DataItem[] = [
-  {
-    type: "Casa",
-    cost: [2400, 1212, 1212],
-  },
-  {
-    type: "Departamento",
-    cost: [1398],
-  },
-  {
-    type: "Lote",
-    cost: [9800],
-  },
-];
-
-const transformedData = data.map((item) => {
-  const costsObject = item.cost.reduce((acc: any, cost, index) => {
-    acc[`cost${index + 1}`] = cost;
-    return acc;
-  }, {});
-  return {
-    type: item.type,
-    ...costsObject,
-  };
-});
 
 const typeColors: Record<string, string> = {
   Casa: "#8884d8",
@@ -74,6 +69,15 @@ const CustomTooltip: React.FC<any> = ({ active, payload }) => {
 };
 
 const Chart: React.FC = () => {
+  const [listings, setListings] = useAtom(listingsAtom);
+  const [transformedData, setTransformedData] = useState([]);
+
+  // useEffect(() => {
+  //   setTransformedData(listings);
+  // }, listings);
+  
+  console.log("atom", listings);
+
   return (
     <div style={{ width: "100%", height: "400px" }}>
       <ResponsiveContainer width="100%" height="100%">
@@ -90,7 +94,7 @@ const Chart: React.FC = () => {
           <XAxis dataKey="type" />
           <YAxis />
           <Tooltip content={<CustomTooltip />} />
-          {Array.from({
+          {/* {Array.from({
             length: Math.max(...data.map((item) => item.cost.length)),
           }).map((_, costIndex) => (
             <Bar
@@ -98,7 +102,7 @@ const Chart: React.FC = () => {
               dataKey={`cost${costIndex + 1}`}
               fill={typeColors[data[costIndex]?.type]}
             />
-          ))}
+          ))} */}
         </BarChart>
       </ResponsiveContainer>
     </div>

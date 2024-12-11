@@ -1,6 +1,8 @@
 "use client";
 
+import { useSetAtom } from "jotai";
 import React, { useEffect, useRef, useState } from "react";
+import { listingsAtom } from "../atoms/listingsAtom";
 
 interface SearchableDropdownProps {
   options: string[];
@@ -11,19 +13,20 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
   options,
   placeholder = "Search by city...",
 }) => {
-  const [searchTerm, setSearchTerm] = useState("");
+  const [city, setCity] = useState("");
   const [isOpen, setIsOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [listings, setListings] = useState<string[]>([]);
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
+  const setListingsAtom = useSetAtom(listingsAtom);
 
   const filteredOptions = options.filter((option) =>
-    option.toLowerCase().includes(searchTerm.toLowerCase())
+    option.toLowerCase().includes(city.toLowerCase())
   );
 
   const handleOptionClick = (option: string) => {
-    setSearchTerm(option);
+    setCity(option);
     setIsOpen(false);
   };
 
@@ -49,12 +52,15 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
     let listings;
 
     try {
-      const res = await fetch(`/api/listings?city=${searchTerm}`, {
+      const res = await fetch(`/api/listings?city=${city}`, {
         cache: "no-store",
       });
       listings = await res.json();
+      console.log({ listings });
+
       if (res.ok) {
-        setListings(listings);
+        // setListings(listings);
+        setListingsAtom(listings);
       } else {
         setError("An error occurred");
       }
@@ -67,12 +73,12 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
   };
 
   return (
-    <div className="flex space-x-4">
+    <div className="flex space-x-4 place-content-center my-6">
       <div ref={dropdownRef} className="relative w-64">
         <input
           type="text"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
+          value={city}
+          onChange={(e) => setCity(e.target.value)}
           onFocus={() => setIsOpen(true)}
           className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
           placeholder={placeholder}
@@ -99,18 +105,10 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({
         type="button"
         className="focus:outline-none text-white bg-green-700 hover:bg-green-800 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
         onClick={() => fetchListings()}
-        disabled={searchTerm === "" || loading}
+        disabled={city === "" || loading}
       >
         Go!
       </button>
-      <div>
-        {listings?.map((listing: any, i: number) => (
-          <span key={i}>
-            ${listing?.listing?.price?.price} {listing?.type}
-            <br />
-          </span>
-        ))}
-      </div>
     </div>
   );
 };
