@@ -23,13 +23,13 @@ export async function GET(request: NextRequest) {
       );
     }
 
-    // Aqui obtengo unicamente los datos que necesito para utilizar en la app y optimizar la query
     const listings = await Listings.aggregate([
       {
         $match: {
           "address.city.name": city,
           type: { $in: ["Casa", "Departamento"] },
           "attributes.roofedSurface": { $gt: 0 },
+          "listing.operation": "sale",
         },
       },
       {
