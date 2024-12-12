@@ -1,12 +1,16 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+
+import Header from "./components/Header";
+import Footer from "./components/Footer";
+
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
+  description: "Challenge realizado por Pablo Achaval",
   title: "Pulppo Challenge",
-  description: "Challenge para nuevos developers del equipo de pulppo",
 };
 
 export default function RootLayout({
@@ -16,7 +20,13 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>{children}</body>
+      <body className={inter.className}>
+        <Header />
+        <main className="flex-row items-center mx-20 my-10 mb-40">
+          {children}
+        </main>
+        <Footer />
+      </body>
     </html>
   );
 }
