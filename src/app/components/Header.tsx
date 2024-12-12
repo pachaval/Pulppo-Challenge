@@ -6,15 +6,18 @@ import { usePathname } from "next/navigation";
 import classNames from "classnames";
 
 const Header = () => {
-  const links = [{ label: "CityStats", href: "/cities" }];
+  const links = [
+    { label: "CityStats", href: "/" },
+    { label: "About", href: "/about" },
+  ];
   const currentPath = usePathname();
 
   return (
     <nav className="bg-white shadow-md p-4 flex space-x-6 items-center">
       <Link href="/">
         <Image
-          src={`/logo.png`}
           className="h-10 object-contain"
+          src={`/logo.png`}
           alt="Pulppo"
           width={256}
           height={54}
