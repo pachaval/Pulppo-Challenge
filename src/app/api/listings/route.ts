@@ -15,6 +15,7 @@ export async function GET(request: NextRequest) {
 
     const url = new URL(request.url);
     const city = url.searchParams.get("city");
+    const operation = url.searchParams.get("operation");
 
     if (!city) {
       return new Response(
@@ -29,7 +30,7 @@ export async function GET(request: NextRequest) {
           "address.city.name": city,
           type: { $in: ["Casa", "Departamento"] },
           "attributes.roofedSurface": { $gt: 0 },
-          "listing.operation": "sale",
+          "listing.operation": operation,
         },
       },
       {

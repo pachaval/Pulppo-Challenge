@@ -1,11 +1,13 @@
 "use client";
 
 import React, { useEffect, useRef, useState } from "react";
-import { useAtom, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 
+import { operationRadioAtom } from "../atoms/operationRadioAtom";
 import { searchBarAtom } from "../atoms/searchBarAtom";
 import { listingsAtom } from "../atoms/listingsAtom";
 import { cityAtom } from "../atoms/cityAtom";
+import OperationRadio from "./OperationRadio";
 
 interface SearchableDropdownProps {
   options: string[];
@@ -13,6 +15,7 @@ interface SearchableDropdownProps {
 
 const SearchableDropdown: React.FC<SearchableDropdownProps> = ({ options }) => {
   const [{ loading }, setSearchBarAtom] = useAtom(searchBarAtom);
+  const { operation } = useAtomValue(operationRadioAtom);
   const setListingsAtom = useSetAtom(listingsAtom);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -51,9 +54,12 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({ options }) => {
     let data;
 
     try {
-      const res = await fetch(`/api/listings?city=${city}`, {
-        cache: "no-store",
-      });
+      const res = await fetch(
+        `/api/listings?city=${city}&operation=${operation}`,
+        {
+          cache: "no-store",
+        }
+      );
       data = await res.json();
 
       if (res.ok) {
@@ -78,15 +84,24 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({ options }) => {
   return (
     <div className="flex space-x-4 place-content-center mb-10">
       <div ref={dropdownRef} className="relative w-64">
-        <input
-          className="w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
-          onChange={(e) => setCity(e.target.value)}
-          disabled={options.length === 0}
-          onFocus={() => setIsOpen(true)}
-          placeholder="Buscar ciudad..."
-          value={city}
-          type="text"
-        />
+        <div className="relative">
+          <input
+            className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
+            onChange={(e) => setCity(e.target.value)}
+            disabled={options.length === 0}
+            onFocus={() => setIsOpen(true)}
+            placeholder="Buscar ciudad..."
+            value={city}
+            type="text"
+          />
+          <div
+            className="absolute inset-y-0 left-0 pl-3 
+                    flex items-center 
+                    pointer-events-none"
+          >
+            <p className="mr-5 text-xl">🇲🇽</p>
+          </div>
+        </div>
         {isOpen && (
           <ul className="absolute w-full mt-1 bg-white border border-gray-300 rounded-lg shadow-lg max-h-60 overflow-y-auto z-50">
             {filteredOptions.length > 0 ? (
@@ -113,6 +128,7 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({ options }) => {
       >
         Buscar!
       </button>
+      <OperationRadio />
     </div>
   );
 };
