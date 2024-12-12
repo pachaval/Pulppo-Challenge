@@ -6,4 +6,4 @@
 
 **Incluir variables de ambiente:** agregar la URI de mongoDB provista al '.env' del proyecto.
 
-**Instalar dependencias y levatar:** correr 'npm install' y una vez instaladas las dependencias correr npm run start y navegar a http://localhost:3000/
+**Instalar dependencias y levantar:** correr 'npm install' y una vez instaladas las dependencias correr 'npm run dev' y navegar a http://localhost:3000/
