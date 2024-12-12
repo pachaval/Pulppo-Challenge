@@ -6,15 +6,17 @@
 // enfocarnos en los datos comunes de la ciudad, pudiendo asi tomar conclusiones
 // mas certeras, evitando ver casos extremos de propiedades "fuera de lo comun"
 
-export default function removeUnusualData(listings: any) {
-  listings.forEach((listing: any) => {
+import { Listing } from "../types";
+
+export default function removeUnusualData(listings: Listing[]) {
+  listings.forEach((listing: Listing) => {
     listing.avgPricePerMeter = Math.round(
       listing.price / listing.roofedSurface
     );
   });
 
   const totalPricePerMeter = listings.reduce(
-    (sum: any, listing: any) => sum + (listing.avgPricePerMeter || 0),
+    (sum: number, listing: Listing) => sum + (listing.avgPricePerMeter || 0),
     0
   );
   const avgPricePerMeter = Math.round(totalPricePerMeter / listings.length);
@@ -23,7 +25,7 @@ export default function removeUnusualData(listings: any) {
   const upperBound = avgPricePerMeter * 1.5;
 
   const filteredHouses = listings.filter(
-    (house: any) =>
+    (house: Listing) =>
       house.avgPricePerMeter! >= lowerBound &&
       house.avgPricePerMeter! <= upperBound
   );

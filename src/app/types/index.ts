@@ -6,13 +6,14 @@ export const COLORS: Record<string, string> = {
 };
 
 export type ChartData = {
+  Departamento?: number;
   roofedSurface: number;
   Casa?: number;
-  Departamento?: number;
 };
 
 export type Listing = {
-  type: string;
+  avgPricePerMeter: number;
   roofedSurface: number;
   price: number;
+  type: string;
 };

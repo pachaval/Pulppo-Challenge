@@ -1,8 +1,8 @@
 import { useAtom } from "jotai";
 
 import {
-  operationRadioAtom,
   OperationRadioState,
+  operationRadioAtom,
 } from "../atoms/operationRadioAtom";
 
 const OperationRadio = () => {

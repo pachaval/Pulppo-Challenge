@@ -15,9 +15,10 @@ import {
 import { searchBarAtom } from "../atoms/searchBarAtom";
 import { listingsAtom } from "../atoms/listingsAtom";
 import groupListings from "../utils/groupListings";
+import { ChartData, COLORS } from "../types";
 import CustomTooltip from "./CustomTooltip";
-import { ChartData } from "../types";
 import Spinner from "./Spinner";
+import priceFormatter from "../utils/priceFormatter";
 
 const CityBarChart: React.FC = () => {
   const [data, setData] = useState<ChartData[]>([]);
@@ -54,13 +55,15 @@ const CityBarChart: React.FC = () => {
             />
             <YAxis
               type="number"
-              tickFormatter={(value) =>
-                "$" + (value / 1000).toLocaleString("de-DE") + "k"
-              }
+              tickFormatter={(value) => priceFormatter(value)}
             />
             <Tooltip content={<CustomTooltip />} />
-            <Bar dataKey="Casa" fill="#0088FE" barSize={30} />
-            <Bar dataKey="Departamento" fill="#82ca9d" barSize={30} />
+            <Bar dataKey="Casa" fill={COLORS["Casa"]} barSize={30} />
+            <Bar
+              fill={COLORS["Departamento"]}
+              dataKey="Departamento"
+              barSize={30}
+            />
           </BarChart>
         </ResponsiveContainer>
       )}

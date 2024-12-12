@@ -14,13 +14,12 @@ interface SearchableDropdownProps {
 }
 
 const SearchableDropdown: React.FC<SearchableDropdownProps> = ({ options }) => {
-  const [{ loading }, setSearchBarAtom] = useAtom(searchBarAtom);
+  const [{ loading, city }, setSearchBarAtom] = useAtom(searchBarAtom);
   const { operation } = useAtomValue(operationRadioAtom);
   const setListingsAtom = useSetAtom(listingsAtom);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const [isOpen, setIsOpen] = useState(false);
   const setCityAtom = useSetAtom(cityAtom);
-  const [city, setCity] = useState("");
 
   const filteredOptions = options.filter((option) =>
     option.toLowerCase().includes(city.toLowerCase())
@@ -28,7 +27,7 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({ options }) => {
 
   const handleOptionClick = (option: string) => {
     setIsOpen(false);
-    setCity(option);
+    setSearchBarAtom((prev) => ({ ...prev, city: option }));
   };
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -50,7 +49,7 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({ options }) => {
   }, []);
 
   const fetchListings = async () => {
-    setSearchBarAtom({ loading: true, error: "" });
+    setSearchBarAtom((prev) => ({ ...prev, loading: true, error: "" }));
     let data;
 
     try {
@@ -87,7 +86,9 @@ const SearchableDropdown: React.FC<SearchableDropdownProps> = ({ options }) => {
         <div className="relative">
           <input
             className="pl-10 w-full px-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring focus:ring-blue-300"
-            onChange={(e) => setCity(e.target.value)}
+            onChange={(e) =>
+              setSearchBarAtom((prev) => ({ ...prev, city: e.target.value }))
+            }
             disabled={options.length === 0}
             onFocus={() => setIsOpen(true)}
             placeholder="Buscar ciudad..."
