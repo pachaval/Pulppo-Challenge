@@ -8,4 +8,4 @@
 
 **Instalar dependencias y levantar:** correr 'npm run pulppo' y una vez que aparezca el tic verde en la terminal de 'Ready' -> navegar a http://localhost:3000/.
 
-Alternativamente, ejecutar los comandos encadenados 'npm install && npm run build && npm run dev' en el script individualmente. Se puede ejecutar sin el build, pero como hay contenido estatico que se crea en tiempo de build es preferible correrlo antes para simular la experiencia de prod.
+Alternativamente, ejecutar los comandos encadenados 'npm install && npm run build && npm run dev' en el script individualmente.
