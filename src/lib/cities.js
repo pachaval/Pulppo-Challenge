@@ -1,11 +1,6 @@
-let cachedCities = null;
-
 // La llamada de las ciudades/filtros la hago una vez y la cacheo
 export const fetchCities = async () => {
-    if (cachedCities) {
-        return cachedCities;
-    }
-
+    let cachedCities = null;
     try {
         const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/cities`, {
             cache: "force-cache",
